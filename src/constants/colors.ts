@@ -1,6 +1,7 @@
 const Colors = {
   background: "#FCFCFC",
-  text: "#000000",
+  text: "#AFAFAC",
+  menuIcon: "#E8E4E0",
 };
 
 export default Colors;
