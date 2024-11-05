@@ -5,14 +5,20 @@ import Contact from "./contact";
 import styled from "styled-components/native";
 import Colors from "../constants/colors";
 import Icon from "react-native-vector-icons/Feather";
+import { isDrawerOpenAtom } from "../atoms/drawer";
+import { useAtom } from "jotai";
+import { Touchable, TouchableOpacity } from "react-native";
 
-const TabRouterWrapper = styled.SafeAreaView`
+const TabRouterWrapper = styled.SafeAreaView<{ isDrawerOpen: boolean }>`
   flex: 1;
   background-color: ${Colors.background};
-  transform-origin: 100% 0;
-  transform: rotate(-10deg) translate(190px, 40px);
   z-index: 1000;
-  border-radius: 50px;
+  transform-origin: 100% 0;
+  transform: ${({ isDrawerOpen }) =>
+    isDrawerOpen
+      ? "rotate(-10deg) translate(190px, 40px)"
+      : "rotate(0deg) translate(0px, 0px)"};
+  border-radius: ${({ isDrawerOpen }) => (isDrawerOpen ? "50px" : "0")};
 `;
 
 const LogoText = styled.Text`
@@ -33,10 +39,18 @@ const NavBar = styled.View`
 const Tab = createBottomTabNavigator();
 
 export default function TabRouter() {
+  const [isDrawerOpen, setIsDrawerOpen] = useAtom(isDrawerOpenAtom);
+
+  const toggleDrawer = () => {
+    setIsDrawerOpen(!isDrawerOpen);
+  };
+
   return (
-    <TabRouterWrapper>
+    <TabRouterWrapper isDrawerOpen={isDrawerOpen}>
       <NavBar>
-        <Icon name="menu" size={36} color={Colors.menuIcon} />
+        <TouchableOpacity onPress={toggleDrawer}>
+          <Icon name="menu" size={36} color={Colors.menuIcon} />
+        </TouchableOpacity>
         <LogoText>Start</LogoText>
       </NavBar>
 
