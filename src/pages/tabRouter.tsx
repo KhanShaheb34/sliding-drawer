@@ -6,8 +6,13 @@ import styled from "styled-components/native";
 import Colors from "../constants/colors";
 import Icon from "react-native-vector-icons/Feather";
 
-const HomeWrapper = styled.SafeAreaView`
+const TabRouterWrapper = styled.SafeAreaView`
   flex: 1;
+  background-color: ${Colors.background};
+  transform-origin: 100% 0;
+  transform: rotate(-10deg) translate(190px, 40px);
+  z-index: 1000;
+  border-radius: 50px;
 `;
 
 const LogoText = styled.Text`
@@ -29,7 +34,7 @@ const Tab = createBottomTabNavigator();
 
 export default function TabRouter() {
   return (
-    <HomeWrapper>
+    <TabRouterWrapper>
       <NavBar>
         <Icon name="menu" size={36} color={Colors.menuIcon} />
         <LogoText>Start</LogoText>
@@ -44,6 +49,6 @@ export default function TabRouter() {
           <Tab.Screen name="Contact" component={Contact} />
         </Tab.Navigator>
       </NavigationContainer>
-    </HomeWrapper>
+    </TabRouterWrapper>
   );
 }
