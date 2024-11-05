@@ -3,12 +3,14 @@ import Colors from "../constants/colors";
 import { Divider } from "./divider";
 import { useAtom, useAtomValue } from "jotai";
 import { isDrawerOpenAtom } from "../atoms/drawer";
+import { Animated, useAnimatedValue } from "react-native";
+import { useEffect } from "react";
 
-const DrawerWrapper = styled.View<{ isDrawerOpen: boolean }>`
+const DrawerWrapper = styled(Animated.View)<{ isDrawerOpen: boolean }>`
   flex: 1;
   background-color: ${Colors.drawerBackground};
   position: absolute;
-  top: ${({ isDrawerOpen }) => (isDrawerOpen ? "50px" : "0px")};
+  top: 0;
   left: 0;
   right: 0;
   bottom: 0;
@@ -64,9 +66,21 @@ const MenuItem = ({
 
 export const Drawer = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useAtom(isDrawerOpenAtom);
+  const topOffset = useAnimatedValue(0);
+
+  useEffect(() => {
+    Animated.timing(topOffset, {
+      toValue: isDrawerOpen ? 50 : 0,
+      duration: 300,
+      useNativeDriver: true,
+    }).start();
+  }, [isDrawerOpen]);
 
   return (
-    <DrawerWrapper isDrawerOpen={isDrawerOpen}>
+    <DrawerWrapper
+      style={{ transform: [{ translateY: topOffset }] }}
+      isDrawerOpen={isDrawerOpen}
+    >
       <DrawerLogo>Beka</DrawerLogo>
       <DrawerMenu>
         <MenuItem
