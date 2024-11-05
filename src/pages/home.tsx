@@ -1,7 +1,15 @@
 import styled from "styled-components/native";
 import Colors from "../constants/colors";
-import { SafeAreaView } from "react-native";
 import Icon from "react-native-vector-icons/Feather";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import Screen1 from "./screen1";
+import Screen2 from "./screen2";
+import { Text } from "react-native";
+import { NavigationContainer } from "@react-navigation/native";
+
+const HomeWrapper = styled.SafeAreaView`
+  flex: 1;
+`;
 
 const LogoText = styled.Text`
   color: ${Colors.text};
@@ -18,13 +26,25 @@ const NavBar = styled.View`
   padding: 12px;
 `;
 
+const Stack = createNativeStackNavigator();
+
 export default function Home() {
   return (
-    <SafeAreaView>
+    <HomeWrapper>
       <NavBar>
         <Icon name="menu" size={36} color={Colors.menuIcon} />
         <LogoText>Start</LogoText>
       </NavBar>
-    </SafeAreaView>
+
+      <NavigationContainer>
+        <Stack.Navigator
+          initialRouteName="screen1"
+          screenOptions={{ headerShown: false }}
+        >
+          <Stack.Screen name="screen1" component={Screen1} />
+          <Stack.Screen name="screen2" component={Screen2} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </HomeWrapper>
   );
 }
