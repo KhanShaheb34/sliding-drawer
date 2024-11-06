@@ -1,8 +1,8 @@
 import styled from "styled-components/native";
 import Colors from "../constants/colors";
 import { Divider } from "./divider";
-import { useAtom, useAtomValue } from "jotai";
-import { isDrawerOpenAtom } from "../atoms/drawer";
+import { useAtom } from "jotai";
+import { isDrawerOpenAtom, selectedPageAtom } from "../atoms/drawer";
 import { Animated, useAnimatedValue } from "react-native";
 import { useEffect } from "react";
 
@@ -66,6 +66,7 @@ const MenuItem = ({
 
 export const Drawer = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useAtom(isDrawerOpenAtom);
+  const [selectedPage, setSelectedPage] = useAtom(selectedPageAtom);
   const topOffset = useAnimatedValue(0);
 
   useEffect(() => {
@@ -85,12 +86,36 @@ export const Drawer = () => {
       <DrawerMenu>
         <MenuItem
           text="Start"
-          selected
-          onPress={() => setIsDrawerOpen(false)}
+          selected={selectedPage === "Start"}
+          onPress={() => {
+            setSelectedPage("Start");
+            setIsDrawerOpen(false);
+          }}
         />
-        <MenuItem text="Your Cart" />
-        <MenuItem text="Favorites" />
-        <MenuItem text="Your Orders" />
+        <MenuItem
+          text="Your Cart"
+          selected={selectedPage === "Cart"}
+          onPress={() => {
+            setSelectedPage("Cart");
+            setIsDrawerOpen(false);
+          }}
+        />
+        <MenuItem
+          text="Favorites"
+          selected={selectedPage === "Favorites"}
+          onPress={() => {
+            setSelectedPage("Favorites");
+            setIsDrawerOpen(false);
+          }}
+        />
+        <MenuItem
+          text="Your Orders"
+          selected={selectedPage === "Orders"}
+          onPress={() => {
+            setSelectedPage("Orders");
+            setIsDrawerOpen(false);
+          }}
+        />
 
         <Divider />
 
