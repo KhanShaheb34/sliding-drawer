@@ -16,7 +16,6 @@ const DrawerRouterWrapper = styled(Animated.View)<{
   background-color: ${Colors.background};
   z-index: 1000;
   transform-origin: 100% 0;
-  border-radius: 50px;
 `;
 
 export default function DrawerRouter() {
@@ -26,6 +25,7 @@ export default function DrawerRouter() {
   const topOffset = useAnimatedValue(0);
   const leftOffset = useAnimatedValue(0);
   const rotate = useAnimatedValue(0);
+  const borderRadius = useAnimatedValue(0);
 
   const rotateInterpolation = rotate.interpolate({
     inputRange: [0, 10],
@@ -50,6 +50,12 @@ export default function DrawerRouter() {
       duration: 300,
       useNativeDriver: true,
     }).start();
+
+    Animated.timing(borderRadius, {
+      toValue: isDrawerOpen ? 50 : 0,
+      duration: 300,
+      useNativeDriver: true,
+    }).start();
   }, [isDrawerOpen]);
 
   return (
@@ -61,6 +67,7 @@ export default function DrawerRouter() {
           { translateY: topOffset },
           { translateX: leftOffset },
         ],
+        borderRadius,
       }}
     >
       {selectedPage === "Start" && <StartPage />}

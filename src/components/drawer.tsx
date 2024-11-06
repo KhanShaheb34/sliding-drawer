@@ -15,7 +15,6 @@ const DrawerWrapper = styled(Animated.View)<{ isDrawerOpen: boolean }>`
   right: 0;
   bottom: 0;
   z-index: 100;
-  border-radius: 50px;
   padding: 30px;
 `;
 
@@ -67,10 +66,18 @@ const MenuItem = ({
 export const Drawer = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useAtom(isDrawerOpenAtom);
   const [selectedPage, setSelectedPage] = useAtom(selectedPageAtom);
+
   const topOffset = useAnimatedValue(0);
+  const borderRadius = useAnimatedValue(0);
 
   useEffect(() => {
     Animated.timing(topOffset, {
+      toValue: isDrawerOpen ? 50 : 0,
+      duration: 300,
+      useNativeDriver: true,
+    }).start();
+
+    Animated.timing(borderRadius, {
       toValue: isDrawerOpen ? 50 : 0,
       duration: 300,
       useNativeDriver: true,
@@ -79,7 +86,10 @@ export const Drawer = () => {
 
   return (
     <DrawerWrapper
-      style={{ transform: [{ translateY: topOffset }] }}
+      style={{
+        transform: [{ translateY: topOffset }],
+        borderRadius,
+      }}
       isDrawerOpen={isDrawerOpen}
     >
       <DrawerLogo>Beka</DrawerLogo>
