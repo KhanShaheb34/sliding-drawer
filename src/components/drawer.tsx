@@ -3,7 +3,12 @@ import Colors from "../constants/colors";
 import { Divider } from "./divider";
 import { useAtom } from "jotai";
 import { isDrawerOpenAtom, selectedPageAtom } from "../atoms/drawer";
-import { Animated, useAnimatedValue } from "react-native";
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+  Easing,
+} from "react-native-reanimated";
 import { useEffect } from "react";
 
 const DrawerWrapper = styled(Animated.View)<{ isDrawerOpen: boolean }>`
@@ -67,31 +72,26 @@ export const Drawer = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useAtom(isDrawerOpenAtom);
   const [selectedPage, setSelectedPage] = useAtom(selectedPageAtom);
 
-  const topOffset = useAnimatedValue(0);
-  const borderRadius = useAnimatedValue(0);
+  const topOffset = useSharedValue(0);
+  const borderRadius = useSharedValue(0);
 
   useEffect(() => {
-    Animated.timing(topOffset, {
-      toValue: isDrawerOpen ? 50 : 0,
-      duration: 300,
-      useNativeDriver: true,
-    }).start();
+    const config = {
+      duration: 500,
+      easing: Easing.inOut(Easing.ease),
+    };
 
-    Animated.timing(borderRadius, {
-      toValue: isDrawerOpen ? 50 : 0,
-      duration: 300,
-      useNativeDriver: true,
-    }).start();
+    topOffset.value = withTiming(isDrawerOpen ? 50 : 0, config);
+    borderRadius.value = withTiming(isDrawerOpen ? 50 : 0, config);
   }, [isDrawerOpen]);
 
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ translateY: topOffset.value }],
+    borderRadius: borderRadius.value,
+  }));
+
   return (
-    <DrawerWrapper
-      style={{
-        transform: [{ translateY: topOffset }],
-        borderRadius,
-      }}
-      isDrawerOpen={isDrawerOpen}
-    >
+    <DrawerWrapper style={animatedStyle} isDrawerOpen={isDrawerOpen}>
       <DrawerLogo>Beka</DrawerLogo>
       <DrawerMenu>
         <MenuItem

@@ -2,12 +2,18 @@ import styled from "styled-components/native";
 import Colors from "../constants/colors";
 import { isDrawerOpenAtom, selectedPageAtom } from "../atoms/drawer";
 import { useAtomValue } from "jotai";
-import { Animated, useAnimatedValue } from "react-native";
 import { useEffect } from "react";
 import StartPage from "./startPage";
 import CartPage from "./cartPage";
 import FavoritesPage from "./favoritesPage";
 import OrdersPage from "./ordersPage";
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+  interpolate,
+  Easing,
+} from "react-native-reanimated";
 
 const DrawerRouterWrapper = styled(Animated.View)<{
   isDrawerOpen: boolean;
@@ -22,54 +28,38 @@ export default function DrawerRouter() {
   const isDrawerOpen = useAtomValue(isDrawerOpenAtom);
   const selectedPage = useAtomValue(selectedPageAtom);
 
-  const topOffset = useAnimatedValue(0);
-  const leftOffset = useAnimatedValue(0);
-  const rotate = useAnimatedValue(0);
-  const borderRadius = useAnimatedValue(0);
+  const topOffset = useSharedValue(0);
+  const leftOffset = useSharedValue(0);
+  const rotate = useSharedValue(0);
+  const borderRadius = useSharedValue(0);
 
-  const rotateInterpolation = rotate.interpolate({
-    inputRange: [0, 10],
-    outputRange: ["0deg", "-10deg"],
+  const animatedStyle = useAnimatedStyle(() => {
+    const rotateInterpolation = interpolate(rotate.value, [0, 10], [0, -10]);
+
+    return {
+      transform: [
+        { rotate: `${rotateInterpolation}deg` },
+        { translateY: topOffset.value },
+        { translateX: leftOffset.value },
+      ],
+      borderRadius: borderRadius.value,
+    };
   });
 
   useEffect(() => {
-    Animated.timing(rotate, {
-      toValue: isDrawerOpen ? 10 : 0,
-      duration: 300,
-      useNativeDriver: true,
-    }).start();
+    const config = {
+      duration: 500,
+      easing: Easing.inOut(Easing.ease),
+    };
 
-    Animated.timing(topOffset, {
-      toValue: isDrawerOpen ? 50 : 0,
-      duration: 300,
-      useNativeDriver: true,
-    }).start();
-
-    Animated.timing(leftOffset, {
-      toValue: isDrawerOpen ? 190 : 0,
-      duration: 300,
-      useNativeDriver: true,
-    }).start();
-
-    Animated.timing(borderRadius, {
-      toValue: isDrawerOpen ? 50 : 0,
-      duration: 300,
-      useNativeDriver: true,
-    }).start();
+    rotate.value = withTiming(isDrawerOpen ? 10 : 0, config);
+    topOffset.value = withTiming(isDrawerOpen ? 50 : 0, config);
+    leftOffset.value = withTiming(isDrawerOpen ? 190 : 0, config);
+    borderRadius.value = withTiming(isDrawerOpen ? 50 : 0, config);
   }, [isDrawerOpen]);
 
   return (
-    <DrawerRouterWrapper
-      isDrawerOpen={isDrawerOpen}
-      style={{
-        transform: [
-          { rotate: rotateInterpolation },
-          { translateY: topOffset },
-          { translateX: leftOffset },
-        ],
-        borderRadius,
-      }}
-    >
+    <DrawerRouterWrapper isDrawerOpen={isDrawerOpen} style={animatedStyle}>
       {selectedPage === "Start" && <StartPage />}
       {selectedPage === "Cart" && <CartPage />}
       {selectedPage === "Favorites" && <FavoritesPage />}
