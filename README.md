@@ -32,6 +32,7 @@ This is a React Native application that implements a sliding drawer navigation s
    ```
 
 3. **Start the application**:
+
    ```bash
    pnpm start
    ```
@@ -39,3 +40,10 @@ This is a React Native application that implements a sliding drawer navigation s
 ## Demo
 
 Here's a short demo video of the app: [video](./assets/demo.MP4)
+
+## Additional Information
+
+- **Navigation**: The app uses `@react-navigation` for handling navigation, with a combination of bottom tabs and a sliding drawer.
+- **Animation**: `react-native-reanimated` is used for creating smooth animations.
+- **Icons**: `react-native-vector-icons` is used for iconography.
+- **TypeScript**: The project is written in TypeScript, ensuring type safety and better developer experience.
