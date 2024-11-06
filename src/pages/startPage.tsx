@@ -2,9 +2,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import React from "react";
 import Contact from "./contact";
 import Home from "./home";
-import styled from "styled-components/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import Colors from "../constants/colors";
 import PageLayout from "../components/pageLayout";
 
 const Tab = createBottomTabNavigator();
