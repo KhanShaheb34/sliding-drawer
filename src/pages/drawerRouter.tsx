@@ -14,6 +14,7 @@ import Animated, {
   interpolate,
   Easing,
 } from "react-native-reanimated";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const DrawerRouterWrapper = styled(Animated.View)<{
   isDrawerOpen: boolean;
@@ -32,6 +33,8 @@ export default function DrawerRouter() {
   const leftOffset = useSharedValue(0);
   const rotate = useSharedValue(0);
   const borderRadius = useSharedValue(0);
+
+  const safeAreaTop = useSafeAreaInsets().top;
 
   const animatedStyle = useAnimatedStyle(() => {
     const rotateInterpolation = interpolate(rotate.value, [0, 10], [0, -10]);
@@ -53,7 +56,7 @@ export default function DrawerRouter() {
     };
 
     rotate.value = withTiming(isDrawerOpen ? 10 : 0, config);
-    topOffset.value = withTiming(isDrawerOpen ? 50 : 0, config);
+    topOffset.value = withTiming(isDrawerOpen ? safeAreaTop : 0, config);
     leftOffset.value = withTiming(isDrawerOpen ? 190 : 0, config);
     borderRadius.value = withTiming(isDrawerOpen ? 50 : 0, config);
   }, [isDrawerOpen]);

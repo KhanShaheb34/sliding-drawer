@@ -10,6 +10,7 @@ import Animated, {
   Easing,
 } from "react-native-reanimated";
 import { useEffect } from "react";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const DrawerWrapper = styled(Animated.View)<{ isDrawerOpen: boolean }>`
   flex: 1;
@@ -72,6 +73,8 @@ export const Drawer = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useAtom(isDrawerOpenAtom);
   const [selectedPage, setSelectedPage] = useAtom(selectedPageAtom);
 
+  const safeAreaTop = useSafeAreaInsets().top;
+
   const topOffset = useSharedValue(0);
   const borderRadius = useSharedValue(0);
 
@@ -81,7 +84,7 @@ export const Drawer = () => {
       easing: Easing.inOut(Easing.ease),
     };
 
-    topOffset.value = withTiming(isDrawerOpen ? 50 : 0, config);
+    topOffset.value = withTiming(isDrawerOpen ? safeAreaTop : 0, config);
     borderRadius.value = withTiming(isDrawerOpen ? 50 : 0, config);
   }, [isDrawerOpen]);
 
