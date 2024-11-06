@@ -40,4 +40,4 @@ This is a React Native application that implements a sliding drawer navigation s
 
 ![Demo](./assets/demo.gif)
 
-Or view the [video](./assets/demo.mp4)
+Or view the [video](./assets/demo.MP4)
